@@ -20,21 +20,78 @@ github_token <- oauth2.0_token(oauth_endpoints("github"), myapp)
 
 # Use API
 gtoken <- config(token = github_token)
-req <- GET("https://api.github.com/users/jtleek/repos", gtoken)
+req <- GET("https://api.github.com/users/oppermac/repos", gtoken)
 
 # Take action on http error
 stop_for_status(req)
 
 # Extract content from a request
-json1 = content(req)
+reqContent = content(req)
 
 # Convert to a data.frame
-gitDF = jsonlite::fromJSON(jsonlite::toJSON(json1))
+gitDF = jsonlite::fromJSON(jsonlite::toJSON(reqContent))
 
 # Subset data.frame
-gitDF[gitDF$full_name == "jtleek/datasharing", "created_at"]
+gitDF[gitDF$full_name == "oppermac/datasharing", "created_at"]
 
 ##################################################
 
 require(devtools)
+
+### Collecting & Displaying My Data - "oppermac" is my login
+# Get my data
+oppermacData = fromJSON("https://api.github.com/users/oppermac")
+
+# Display the number of followers
+oppermacData$followers
+
+# Gives user names of all my followers
+followers = fromJSON("https://api.github.com/users/oppermac/followers")
+followers$login
+
+# Display the number of users I am following
+oppermacData$following
+
+# Gives user names of all the users I am following
+following = fromJSON("https://api.github.com/users/oppermac/following")
+following$login
+
+# Display the number of repositories I have
+oppermacData$public_repos
+
+# Gives the name and creation date for my repositories
+repositories = fromJSON("https://api.github.com/users/oppermac/repos")
+repositories$name
+repositories$created_at
+
+
+#Seeing as my account is not very active and I have very few followers, I
+#decided to see if I could get data for Linus Torvalds GitHub
+
+### Collecting & Displaying Linus' Data
+# Get Torvalds' data
+torvaldsData = fromJSON("https://api.github.com/users/torvalds")
+
+# Display the number of followers
+torvaldsData$followers
+
+# Gives user names of all Torvalds' followers
+followers = fromJSON("https://api.github.com/users/torvalds/followers")
+followers$login
+
+# Display the number of users Torvalds is following
+torvaldsData$following
+
+# Gives user names of all the users Torvalds is following
+following = fromJSON("https://api.github.com/users/torvalds/following")
+following$login
+
+# Display the number of repositories Torvalds has
+torvaldsData$public_repos
+
+# Gives the name and creation date for Torvalds' repositories
+repositories = fromJSON("https://api.github.com/users/torvalds/repos")
+repositories$name
+repositories$created_at
+
 
